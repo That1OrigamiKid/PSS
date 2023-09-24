@@ -4124,7 +4124,9 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Mouse.Cnds.IsButtonDown,
 		C3.Plugins.Mouse.Exps.X,
 		C3.Plugins.Mouse.Exps.Y,
-		C3.Plugins.Touch.Cnds.IsInTouch
+		C3.Plugins.Touch.Cnds.IsInTouch,
+		C3.Plugins.Touch.Exps.X,
+		C3.Plugins.Touch.Exps.Y
 	];
 };
 self.C3_JsPropNameTable = [
