@@ -4206,6 +4206,14 @@ function SplitConvexPolysOver8Points(convexPolys){const ret=[];for(const arr of 
 }
 
 {
+'use strict';{const C3=self.C3;C3.Behaviors.bound=class BoundBehavior extends C3.SDKBehaviorBase{constructor(opts){super(opts)}Release(){super.Release()}}}{const C3=self.C3;C3.Behaviors.bound.Type=class BoundType extends C3.SDKBehaviorTypeBase{constructor(behaviorType){super(behaviorType)}Release(){super.Release()}OnCreate(){}}}
+{const C3=self.C3;const MODE=0;C3.Behaviors.bound.Instance=class BoundInstance extends C3.SDKBehaviorInstanceBase{constructor(behInst,properties){super(behInst);this._mode=0;if(properties)this._mode=properties[MODE];this._StartTicking2()}Release(){super.Release()}SaveToJson(){return{"m":this._mode}}LoadFromJson(o){this._mode=o["m"]}Tick2(){const wi=this._inst.GetWorldInfo();const bbox=wi.GetBoundingBox();const layout=wi.GetLayout();let isChanged=false;if(this._mode===0){if(wi.GetX()<0){wi.SetX(0);
+isChanged=true}if(wi.GetY()<0){wi.SetY(0);isChanged=true}if(wi.GetX()>layout.GetWidth()){wi.SetX(layout.GetWidth());isChanged=true}if(wi.GetY()>layout.GetHeight()){wi.SetY(layout.GetHeight());isChanged=true}}else{if(bbox.getLeft()<0){wi.OffsetX(-bbox.getLeft());isChanged=true}if(bbox.getTop()<0){wi.OffsetY(-bbox.getTop());isChanged=true}if(bbox.getRight()>layout.GetWidth()){wi.OffsetX(-(bbox.getRight()-layout.GetWidth()));isChanged=true}if(bbox.getBottom()>layout.GetHeight()){wi.OffsetY(-(bbox.getBottom()-
+layout.GetHeight()));isChanged=true}}if(isChanged)wi.SetBboxChanged()}GetPropertyValueByIndex(index){switch(index){case MODE:return this._mode}}SetPropertyValueByIndex(index,value){switch(index){case MODE:this._mode=value;break}}}}{const C3=self.C3;C3.Behaviors.bound.Cnds={}}{const C3=self.C3;C3.Behaviors.bound.Acts={}}{const C3=self.C3;C3.Behaviors.bound.Exps={}};
+
+}
+
+{
 'use strict';{const C3=self.C3;C3.Behaviors.EightDir=class EightDirBehavior extends C3.SDKBehaviorBase{constructor(opts){super(opts)}Release(){super.Release()}}}{const C3=self.C3;C3.Behaviors.EightDir.Type=class EightDirType extends C3.SDKBehaviorTypeBase{constructor(behaviorType){super(behaviorType)}Release(){super.Release()}OnCreate(){}}}
 {const C3=self.C3;const C3X=self.C3X;const IBehaviorInstance=self.IBehaviorInstance;const MAX_SPEED=0;const ACCELERATION=1;const DEACCELERATION=2;const DIRECTION=3;const ANGLE_MODE=4;const ALLOW_SLIDING=5;const DEFAULT_CONTROLS=6;const ENABLE=7;C3.Behaviors.EightDir.Instance=class EightDirInstance extends C3.SDKBehaviorInstanceBase{constructor(behInst,properties){super(behInst);this._upKey=false;this._downKey=false;this._leftKey=false;this._rightKey=false;this._ignoreInput=false;this._simUp=false;
 this._simDown=false;this._simLeft=false;this._simRight=false;this._dx=0;this._dy=0;this._maxSpeed=200;this._acc=600;this._dec=500;this._directions=3;this._angleMode=3;this._allowSliding=false;this._defaultControls=true;this._isEnabled=true;if(properties){this._maxSpeed=properties[MAX_SPEED];this._acc=properties[ACCELERATION];this._dec=properties[DEACCELERATION];this._directions=properties[DIRECTION];this._angleMode=properties[ANGLE_MODE];this._allowSliding=!!properties[ALLOW_SLIDING];this._defaultControls=
@@ -4238,23 +4246,15 @@ SetAllowSliding(s){this._SetAllowSliding(s)}}}{const C3=self.C3;C3.Behaviors.Eig
 }
 
 {
-'use strict';{const C3=self.C3;C3.Behaviors.bound=class BoundBehavior extends C3.SDKBehaviorBase{constructor(opts){super(opts)}Release(){super.Release()}}}{const C3=self.C3;C3.Behaviors.bound.Type=class BoundType extends C3.SDKBehaviorTypeBase{constructor(behaviorType){super(behaviorType)}Release(){super.Release()}OnCreate(){}}}
-{const C3=self.C3;const MODE=0;C3.Behaviors.bound.Instance=class BoundInstance extends C3.SDKBehaviorInstanceBase{constructor(behInst,properties){super(behInst);this._mode=0;if(properties)this._mode=properties[MODE];this._StartTicking2()}Release(){super.Release()}SaveToJson(){return{"m":this._mode}}LoadFromJson(o){this._mode=o["m"]}Tick2(){const wi=this._inst.GetWorldInfo();const bbox=wi.GetBoundingBox();const layout=wi.GetLayout();let isChanged=false;if(this._mode===0){if(wi.GetX()<0){wi.SetX(0);
-isChanged=true}if(wi.GetY()<0){wi.SetY(0);isChanged=true}if(wi.GetX()>layout.GetWidth()){wi.SetX(layout.GetWidth());isChanged=true}if(wi.GetY()>layout.GetHeight()){wi.SetY(layout.GetHeight());isChanged=true}}else{if(bbox.getLeft()<0){wi.OffsetX(-bbox.getLeft());isChanged=true}if(bbox.getTop()<0){wi.OffsetY(-bbox.getTop());isChanged=true}if(bbox.getRight()>layout.GetWidth()){wi.OffsetX(-(bbox.getRight()-layout.GetWidth()));isChanged=true}if(bbox.getBottom()>layout.GetHeight()){wi.OffsetY(-(bbox.getBottom()-
-layout.GetHeight()));isChanged=true}}if(isChanged)wi.SetBboxChanged()}GetPropertyValueByIndex(index){switch(index){case MODE:return this._mode}}SetPropertyValueByIndex(index,value){switch(index){case MODE:this._mode=value;break}}}}{const C3=self.C3;C3.Behaviors.bound.Cnds={}}{const C3=self.C3;C3.Behaviors.bound.Acts={}}{const C3=self.C3;C3.Behaviors.bound.Exps={}};
-
-}
-
-{
 const C3 = self.C3;
 self.C3_GetObjectRefTable = function () {
 	return [
 		C3.Plugins.Sprite,
 		C3.Behaviors.Physics,
+		C3.Behaviors.bound,
 		C3.Plugins.Mouse,
 		C3.Plugins.Touch,
 		C3.Behaviors.EightDir,
-		C3.Behaviors.bound,
 		C3.Plugins.gamepad,
 		C3.Plugins.sliderbar,
 		C3.Plugins.Text,
@@ -4288,13 +4288,13 @@ self.C3_GetObjectRefTable = function () {
 };
 self.C3_JsPropNameTable = [
 	{Physics: 0},
+	{BoundToLayout: 0},
 	{player: 0},
 	{platform: 0},
 	{reset: 0},
 	{Mouse: 0},
 	{Touch: 0},
 	{"8Direction": 0},
-	{BoundToLayout: 0},
 	{controllerCursor: 0},
 	{Gamepad: 0},
 	{SliderBar: 0},
