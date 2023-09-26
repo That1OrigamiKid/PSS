@@ -4295,35 +4295,36 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Keyboard,
 		C3.Plugins.PlatformInfo,
 		C3.Plugins.Sprite.Cnds.IsOverlapping,
+		C3.Plugins.gamepad.Acts.Vibrate,
 		C3.Plugins.Sprite.Acts.SetPos,
 		C3.Plugins.System.Exps.random,
 		C3.Plugins.Mouse.Cnds.IsButtonDown,
 		C3.Plugins.Mouse.Exps.X,
 		C3.Plugins.Mouse.Exps.Y,
-		C3.Plugins.Touch.Cnds.IsInTouch,
-		C3.Plugins.Touch.Exps.X,
-		C3.Plugins.Touch.Exps.Y,
-		C3.Plugins.Touch.Cnds.CompareAcceleration,
-		C3.Plugins.Sprite.Acts.SetX,
-		C3.Plugins.Sprite.Exps.X,
-		C3.Plugins.Touch.Exps.AccelerationX,
-		C3.Plugins.Sprite.Acts.SetY,
-		C3.Plugins.Sprite.Exps.Y,
-		C3.Plugins.Touch.Exps.AccelerationY,
-		C3.Plugins.gamepad.Cnds.OnGamepadConnected,
-		C3.Plugins.Sprite.Acts.Spawn,
-		C3.Plugins.gamepad.Cnds.OnGamepadDisconnected,
-		C3.Plugins.Sprite.Acts.Destroy,
-		C3.Plugins.gamepad.Cnds.CompareAxis,
-		C3.Behaviors.EightDir.Acts.SimulateControl,
-		C3.Plugins.gamepad.Cnds.IsButtonDown,
 		C3.Plugins.System.Cnds.EveryTick,
 		C3.Plugins.Text.Acts.SetText,
 		C3.Plugins.sliderbar.Exps.Value,
 		C3.Behaviors.Physics.Acts.SetElasticity,
+		C3.Plugins.Sprite.Acts.MoveToTop,
+		C3.Plugins.Sprite.Acts.SetX,
+		C3.Plugins.Sprite.Exps.X,
+		C3.Plugins.gamepad.Exps.Axis,
+		C3.Plugins.Sprite.Acts.SetY,
+		C3.Plugins.Sprite.Exps.Y,
 		C3.Plugins.Keyboard.Cnds.OnKeyReleased,
+		C3.Plugins.Sprite.Acts.Spawn,
+		C3.Plugins.Touch.Cnds.IsInTouch,
+		C3.Plugins.Touch.Exps.X,
+		C3.Plugins.Touch.Exps.Y,
 		C3.Plugins.PlatformInfo.Cnds.IsOnMobile,
-		C3.Plugins.Touch.Cnds.OnTouchObject
+		C3.Plugins.Sprite.Acts.Destroy,
+		C3.Plugins.Touch.Cnds.OnTouchObject,
+		C3.Plugins.gamepad.Cnds.IsButtonDown,
+		C3.Plugins.gamepad.Cnds.CompareAxis,
+		C3.Plugins.gamepad.Cnds.OnGamepadDisconnected,
+		C3.Plugins.gamepad.Cnds.OnButtonUp,
+		C3.Plugins.sliderbar.Acts.SetValue,
+		C3.Plugins.gamepad.Cnds.OnGamepadConnected
 	];
 };
 self.C3_JsPropNameTable = [
@@ -4341,7 +4342,9 @@ self.C3_JsPropNameTable = [
 	{Text: 0},
 	{Keyboard: 0},
 	{Sprite: 0},
-	{PlatformInfo: 0}
+	{PlatformInfo: 0},
+	{controllerCursorX: 0},
+	{controllerCursorY: 0}
 ];
 }
 
@@ -4442,6 +4445,9 @@ function or(l, r)
 }
 
 self.C3_ExpressionFuncs = [
+		() => 0,
+		() => 50,
+		() => 100000,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => Math.round(f0(1, 1279));
@@ -4451,22 +4457,31 @@ self.C3_ExpressionFuncs = [
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0();
 		},
-		() => 1,
 		p => {
 			const n0 = p._GetNode(0);
-			const f1 = p._GetNode(1).GetBoundMethod();
-			return () => (n0.ExpObject() + f1());
+			return () => and("elasticity: ", n0.ExpObject());
 		},
-		() => 0,
-		() => 820,
-		() => 480,
 		p => {
 			const n0 = p._GetNode(0);
 			return () => n0.ExpObject();
 		},
 		p => {
 			const n0 = p._GetNode(0);
-			return () => ("elasticity: " + (n0.ExpObject()).toString());
+			const f1 = p._GetNode(1).GetBoundMethod();
+			return () => (n0.ExpObject() + (f1(0, 0) / 10));
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			const f1 = p._GetNode(1).GetBoundMethod();
+			return () => (n0.ExpObject() + (f1(0, 1) / 10));
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => (n0.ExpObject() + 0.1);
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => (n0.ExpObject() - 0.1);
 		}
 ];
 
