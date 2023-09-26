@@ -4248,6 +4248,23 @@ layout.GetHeight()));isChanged=true}}if(isChanged)wi.SetBboxChanged()}GetPropert
 }
 
 {
+'use strict';{const C3=self.C3;C3.Behaviors.DragnDrop=class DragnDropBehavior extends C3.SDKBehaviorBase{constructor(opts){super(opts);const rt=this._runtime.Dispatcher();this._disposables=new C3.CompositeDisposable(C3.Disposable.From(rt,"pointerdown",e=>this._OnPointerDown(e.data)),C3.Disposable.From(rt,"pointermove",e=>this._OnPointerMove(e.data)),C3.Disposable.From(rt,"pointerup",e=>this._OnPointerUp(e.data,false)),C3.Disposable.From(rt,"pointercancel",e=>this._OnPointerUp(e.data,true)))}Release(){this._disposables.Release();
+this._disposables=null;super.Release()}_OnPointerDown(e){if(e["pointerType"]==="mouse"&&e["button"]!==0)return;this._OnInputDown(e["pointerId"].toString(),e["pageX"]-this._runtime.GetCanvasClientX(),e["pageY"]-this._runtime.GetCanvasClientY())}_OnPointerMove(e){if((e["lastButtons"]&1)!==0&&(e["buttons"]&1)===0)this._OnInputUp(e["pointerId"].toString());else this._OnInputMove(e["pointerId"].toString(),e["pageX"]-this._runtime.GetCanvasClientX(),e["pageY"]-this._runtime.GetCanvasClientY())}_OnPointerUp(e,
+isCancel){if(e["pointerType"]==="mouse"&&e["button"]!==0)return;this._OnInputUp(e["pointerId"].toString())}async _OnInputDown(src,clientX,clientY){const myInstances=this.GetInstances();let topMost=null;let topBehInst=null;let topX=0;let topY=0;for(const inst of myInstances){const behInst=inst.GetBehaviorSdkInstanceFromCtor(C3.Behaviors.DragnDrop);if(!behInst.IsEnabled()||behInst.IsDragging()||inst.IsDestroyed())continue;const wi=inst.GetWorldInfo();const layer=wi.GetLayer();const [lx,ly]=layer.CanvasCssToLayer(clientX,
+clientY,wi.GetTotalZElevation());if(!layer.IsSelfAndParentsInteractive()||!wi.ContainsPoint(lx,ly))continue;if(!topMost){topMost=inst;topBehInst=behInst;topX=lx;topY=ly;continue}const topWi=topMost.GetWorldInfo();if(layer.GetIndex()>topWi.GetLayer().GetIndex()||layer.GetIndex()===topWi.GetLayer().GetIndex()&&wi.GetZIndex()>topWi.GetZIndex()){topMost=inst;topBehInst=behInst;topX=lx;topY=ly}}if(topMost)await topBehInst._OnDown(src,topX,topY)}_OnInputMove(src,clientX,clientY){const myInstances=this.GetInstances();
+for(const inst of myInstances){const behInst=inst.GetBehaviorSdkInstanceFromCtor(C3.Behaviors.DragnDrop);if(!behInst.IsEnabled()||!behInst.IsDragging()||behInst.IsDragging()&&behInst.GetDragSource()!==src)continue;const wi=inst.GetWorldInfo();const layer=wi.GetLayer();const [lx,ly]=layer.CanvasCssToLayer(clientX,clientY,wi.GetTotalZElevation());behInst._OnMove(lx,ly)}}async _OnInputUp(src){const myInstances=this.GetInstances();for(const inst of myInstances){const behInst=inst.GetBehaviorSdkInstanceFromCtor(C3.Behaviors.DragnDrop);
+if(behInst.IsDragging()&&behInst.GetDragSource()===src)await behInst._OnUp()}}}}{const C3=self.C3;C3.Behaviors.DragnDrop.Type=class DragnDropType extends C3.SDKBehaviorTypeBase{constructor(behaviorType){super(behaviorType)}Release(){super.Release()}OnCreate(){}}}
+{const C3=self.C3;const C3X=self.C3X;const IBehaviorInstance=self.IBehaviorInstance;const AXES=0;const ENABLE=1;C3.Behaviors.DragnDrop.Instance=class DragnDropInstance extends C3.SDKBehaviorInstanceBase{constructor(behInst,properties){super(behInst);this._isDragging=false;this._dx=0;this._dy=0;this._dragSource="<none>";this._axes=0;this._isEnabled=true;if(properties){this._axes=properties[AXES];this._isEnabled=properties[ENABLE]}}Release(){super.Release()}SaveToJson(){return{"a":this._axes,"e":this._isEnabled}}LoadFromJson(o){this._axes=
+o["a"];this._isEnabled=o["e"];this._isDragging=false}_SetEnabled(e){this._isEnabled=!!e;if(!this._isEnabled)this._isDragging=false}IsEnabled(){return this._isEnabled}_SetAxes(a){this._axes=a}_GetAxes(){return this._axes}_Drop(){if(this._isDragging)this._OnUp()}IsDragging(){return this._isDragging}GetDragSource(){return this._dragSource}async _OnDown(src,x,y){const wi=this.GetWorldInfo();this._dx=x-wi.GetX();this._dy=y-wi.GetY();this._isDragging=true;this._dragSource=src;this.DispatchScriptEvent("dragstart");
+await this.TriggerAsync(C3.Behaviors.DragnDrop.Cnds.OnDragStart)}_OnMove(x,y){const wi=this.GetWorldInfo();const newX=x-this._dx;const newY=y-this._dy;if(this._axes===0){if(wi.GetX()!==newX||wi.GetY()!==newY){wi.SetXY(newX,newY);wi.SetBboxChanged()}}else if(this._axes===1){if(wi.GetX()!==newX){wi.SetX(newX);wi.SetBboxChanged()}}else if(this._axes===2)if(wi.GetY()!==newY){wi.SetY(newY);wi.SetBboxChanged()}}async _OnUp(){this._isDragging=false;this.DispatchScriptEvent("drop");await this.TriggerAsync(C3.Behaviors.DragnDrop.Cnds.OnDrop)}GetPropertyValueByIndex(index){switch(index){case AXES:return this._GetAxes();
+case ENABLE:return this.IsEnabled()}}SetPropertyValueByIndex(index,value){switch(index){case AXES:this._SetAxes(value);break;case ENABLE:this._SetEnabled(!!value);break}}GetDebuggerProperties(){const prefix="behaviors.dragndrop";const axesPrefix=prefix+".properties.axes";let axesName="";if(this._axes===0)axesName=axesPrefix+".items.both";else if(this._axes===1)axesName=axesPrefix+".items.horizontal-only";else if(this._axes===2)axesName=axesPrefix+".items.vertical-only";return[{title:"$"+this.GetBehaviorType().GetName(),
+properties:[{name:prefix+".debugger.is-dragging",value:this.IsDragging()},{name:axesPrefix+".name",value:[axesName]},{name:prefix+".properties.enabled.name",value:this.IsEnabled(),onedit:v=>this._SetEnabled(v)}]}]}GetScriptInterfaceClass(){return self.IDragDropBehaviorInstance}};const map=new WeakMap;const VALID_AXES=["both","horizontal","vertical"];self.IDragDropBehaviorInstance=class IDragDropBehaviorInstance extends IBehaviorInstance{constructor(){super();map.set(this,IBehaviorInstance._GetInitInst().GetSdkInstance())}set axes(str){const a=
+VALID_AXES.indexOf(str);if(a===-1)throw new Error("invalid axes");map.get(this)._SetAxes(a)}get axes(){return VALID_AXES[map.get(this)._GetAxes()]}drop(){map.get(this)._Drop()}get isDragging(){return map.get(this).IsDragging()}get isEnabled(){return map.get(this).IsEnabled()}set isEnabled(e){map.get(this)._SetEnabled(e)}}}{const C3=self.C3;C3.Behaviors.DragnDrop.Cnds={IsDragging(){return this.IsDragging()},OnDragStart(){return true},OnDrop(){return true},IsEnabled(){return this.IsEnabled()}}}
+{const C3=self.C3;C3.Behaviors.DragnDrop.Acts={SetEnabled(e){this._SetEnabled(!!e)},SetAxes(a){this._SetAxes(a)},Drop(){this._Drop()}}}{const C3=self.C3;C3.Behaviors.DragnDrop.Exps={}};
+
+}
+
+{
 'use strict';{const C3=self.C3;C3.Behaviors.EightDir=class EightDirBehavior extends C3.SDKBehaviorBase{constructor(opts){super(opts)}Release(){super.Release()}}}{const C3=self.C3;C3.Behaviors.EightDir.Type=class EightDirType extends C3.SDKBehaviorTypeBase{constructor(behaviorType){super(behaviorType)}Release(){super.Release()}OnCreate(){}}}
 {const C3=self.C3;const C3X=self.C3X;const IBehaviorInstance=self.IBehaviorInstance;const MAX_SPEED=0;const ACCELERATION=1;const DEACCELERATION=2;const DIRECTION=3;const ANGLE_MODE=4;const ALLOW_SLIDING=5;const DEFAULT_CONTROLS=6;const ENABLE=7;C3.Behaviors.EightDir.Instance=class EightDirInstance extends C3.SDKBehaviorInstanceBase{constructor(behInst,properties){super(behInst);this._upKey=false;this._downKey=false;this._leftKey=false;this._rightKey=false;this._ignoreInput=false;this._simUp=false;
 this._simDown=false;this._simLeft=false;this._simRight=false;this._dx=0;this._dy=0;this._maxSpeed=200;this._acc=600;this._dec=500;this._directions=3;this._angleMode=3;this._allowSliding=false;this._defaultControls=true;this._isEnabled=true;if(properties){this._maxSpeed=properties[MAX_SPEED];this._acc=properties[ACCELERATION];this._dec=properties[DEACCELERATION];this._directions=properties[DIRECTION];this._angleMode=properties[ANGLE_MODE];this._allowSliding=!!properties[ALLOW_SLIDING];this._defaultControls=
@@ -4286,6 +4303,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Sprite,
 		C3.Behaviors.Physics,
 		C3.Behaviors.bound,
+		C3.Behaviors.DragnDrop,
 		C3.Plugins.Mouse,
 		C3.Plugins.Touch,
 		C3.Behaviors.EightDir,
@@ -4302,9 +4320,9 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Mouse.Exps.X,
 		C3.Plugins.Mouse.Exps.Y,
 		C3.Plugins.System.Cnds.EveryTick,
-		C3.Plugins.Text.Acts.SetText,
-		C3.Plugins.sliderbar.Exps.Value,
 		C3.Behaviors.Physics.Acts.SetElasticity,
+		C3.Plugins.sliderbar.Exps.Value,
+		C3.Plugins.Text.Acts.SetText,
 		C3.Plugins.Sprite.Acts.MoveToTop,
 		C3.Plugins.Sprite.Acts.SetX,
 		C3.Plugins.Sprite.Exps.X,
@@ -4331,6 +4349,7 @@ self.C3_JsPropNameTable = [
 	{Physics: 0},
 	{BoundToLayout: 0},
 	{player: 0},
+	{DragDrop: 0},
 	{platform: 0},
 	{reset: 0},
 	{Mouse: 0},
@@ -4343,6 +4362,7 @@ self.C3_JsPropNameTable = [
 	{Keyboard: 0},
 	{Sprite: 0},
 	{PlatformInfo: 0},
+	{border: 0},
 	{controllerCursorX: 0},
 	{controllerCursorY: 0}
 ];
@@ -4459,11 +4479,11 @@ self.C3_ExpressionFuncs = [
 		},
 		p => {
 			const n0 = p._GetNode(0);
-			return () => and("elasticity: ", n0.ExpObject());
+			return () => n0.ExpObject();
 		},
 		p => {
 			const n0 = p._GetNode(0);
-			return () => n0.ExpObject();
+			return () => and("elasticity: ", n0.ExpObject());
 		},
 		p => {
 			const n0 = p._GetNode(0);
