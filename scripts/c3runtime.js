@@ -4314,8 +4314,10 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.PlatformInfo,
 		C3.Plugins.Sprite.Cnds.IsOverlapping,
 		C3.Plugins.gamepad.Acts.Vibrate,
+		C3.Behaviors.Physics.Acts.SetEnabled,
 		C3.Plugins.Sprite.Acts.SetPos,
 		C3.Plugins.System.Exps.random,
+		C3.Plugins.Sprite.Acts.SetAngle,
 		C3.Plugins.Mouse.Cnds.IsButtonDown,
 		C3.Plugins.Mouse.Exps.X,
 		C3.Plugins.Mouse.Exps.Y,
@@ -4362,9 +4364,7 @@ self.C3_JsPropNameTable = [
 	{Keyboard: 0},
 	{Sprite: 0},
 	{PlatformInfo: 0},
-	{border: 0},
-	{controllerCursorX: 0},
-	{controllerCursorY: 0}
+	{border: 0}
 ];
 }
 
