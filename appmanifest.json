@@ -1,7 +1,7 @@
 {
 	"name": "Physics Screen Saver",
 	"short_name": "Physics Screen Saver",
-	"description": "",
+	"description": "A screen saver to play around with",
 	"start_url": "index.html",
 	"display": "fullscreen",
 	"orientation": "landscape",
